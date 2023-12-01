@@ -88,11 +88,11 @@
                 var listItem = checkbox.parent();
                 listItem.toggleClass("task-done");
 
-                // Check if the task is now marked as done, uncheck the checkbox
+                // Check if the task is now marked as done
                 if (listItem.hasClass("task-done")) {
-                    checkbox.removeClass("ui-icon-check");
+                    checkbox.removeClass("ui-icon-arrowthick-2-n-s").addClass("ui-icon-check");
                 } else {
-                    checkbox.addClass("ui-icon-check");
+                    checkbox.removeClass("ui-icon-check").addClass("ui-icon-arrowthick-2-n-s");
                 }
 
                 updateTaskCount();
