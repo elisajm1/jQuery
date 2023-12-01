@@ -10,28 +10,11 @@
     <style>
         #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
         #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; display: none; }
-        #sortable li span { position: absolute; margin-left: -1.3em; cursor: pointer; }
+        #sortable li input.checkbox { margin-right: 5px; }
+        #sortable li span { cursor: pointer; }
         #sortable .deleteBtn { visibility: hidden; }
         #sortable .task-done .deleteBtn { visibility: visible; }
         #taskCount { color: #555; font-size: 14px; margin-top: 10px; }
-        .checkbox {
-            width: 1em;
-            height: 1em;
-            border: 1px solid #000;
-            display: inline-block;
-            position: relative;
-        }
-        .checkbox::before {
-            content: "\2713";
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-size: 1.5em;
-        }
-        .task-done .checkbox::before {
-            display: block;
-        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -57,13 +40,13 @@
             });
 
             // Edit Task Title
-            $("#sortable").on("dblclick", "li", function () {
-                var listItem = $(this);
-                var taskText = listItem.find("span:not(.checkbox)").text();
+            $("#sortable").on("dblclick", "label", function () {
+                var label = $(this);
+                var taskText = label.text();
                 var newTitle = prompt("Edit task title:", taskText);
 
                 if (newTitle !== null) {
-                    listItem.find("span:not(.checkbox)").text(newTitle);
+                    label.text(newTitle);
                 }
             });
 
@@ -75,30 +58,33 @@
 
             // Call updateTaskCount() after adding a new task or deleting a task
             function newElement() {
-                var li = $("<li>").addClass("ui-state-default").hide();
                 var inputValue = $("#myInput").val();
-                var checkbox = $("<span>").addClass("checkbox");
-                checkbox.on("click", function () {
-                    toggleTask($(this));
-                });
-
-                var deleteBtn = $("<span>").addClass("deleteBtn").html("&#10004;");
-                deleteBtn.on("click", function () {
-                    deleteTask($(this));
-                });
-
-                var t = document.createTextNode(inputValue);
-                li.append(checkbox);
-                li.append(t);
-                li.append(deleteBtn);
 
                 if (inputValue === "") {
                     alert("Alahan naputtaa!");
                 } else {
+                    var li = $("<li>").addClass("ui-state-default").hide();
+                    var checkbox = $("<input>").attr("type", "checkbox").addClass("checkbox");
+                    checkbox.on("change", function () {
+                        toggleTask($(this));
+                    });
+
+                    var deleteBtn = $("<span>").addClass("deleteBtn").html("&#10004;");
+                    deleteBtn.on("click", function () {
+                        deleteTask($(this));
+                    });
+
+                    var label = $("<label>").text(inputValue);
+
+                    li.append(checkbox);
+                    li.append(label);
+                    li.append(deleteBtn);
+
                     $("#sortable").append(li);
                     li.fadeIn();
                     updateTaskCount();
                 }
+
                 $("#myInput").val("");
             }
 
@@ -139,3 +125,4 @@
 </body>
 
 </html>
+
