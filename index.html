@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-        #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; display: none; }
-        #sortable li .checkbox { margin-right: 5px; }
-        #sortable li span { cursor: pointer; }
+        #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; font-size: 1.4em; height: 18px; display: none; position: relative; }
+        #sortable li .checkbox { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+        #sortable li label { margin-left: 25px; }
         #sortable .deleteBtn { visibility: hidden; }
         #sortable .task-done .deleteBtn { visibility: visible; }
         #taskCount { color: #555; font-size: 14px; margin-top: 10px; }
@@ -127,5 +127,6 @@
 </body>
 
 </html>
+
 
 
