@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 
 <head>
     <meta charset="UTF-8">
@@ -87,6 +87,14 @@
             function toggleTask(checkbox) {
                 var listItem = checkbox.parent();
                 listItem.toggleClass("task-done");
+
+                // Check if the task is now marked as done, uncheck the checkbox
+                if (listItem.hasClass("task-done")) {
+                    checkbox.removeClass("ui-icon-check");
+                } else {
+                    checkbox.addClass("ui-icon-check");
+                }
+
                 updateTaskCount();
             }
 
@@ -121,4 +129,3 @@
 </body>
 
 </html>
-
