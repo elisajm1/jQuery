@@ -1,10 +1,10 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>To-Do Lista</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -13,6 +13,7 @@
         #sortable li span { position: absolute; margin-left: -1.3em; cursor: pointer; }
         #sortable .deleteBtn { visibility: hidden; }
         #sortable .task-done .deleteBtn { visibility: visible; }
+        #taskCount { color: #555; font-size: 14px; margin-top: 10px; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -23,72 +24,101 @@
         });
 
         $(document).ready(function () {
-            // Lisää uusi tehtävä fadeIn() animaatiolla
             $("#addBtn").on("click", function () {
                 newElement();
             });
 
-            // Poista tehdyt tehtävät fadeOut() animaatiolla
             $("#deleteButton").on("click", function () {
                 deleteCompletedTasks();
             });
-        });
 
-        function newElement() {
-            var li = $("<li>").addClass("ui-state-default").hide();
-            var inputValue = $("#myInput").val();
-            var checkbox = $("<span>").addClass("checkbox ui-icon ui-icon-arrowthick-2-n-s");
-            checkbox.on("click", function () {
-                toggleTask($(this));
+            $("#myInput").on("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    $("#addBtn").click();
+                }
             });
 
-            var deleteBtn = $("<span>").addClass("deleteBtn").html("&#10004;");
-            deleteBtn.on("click", function () {
-                deleteTask($(this));
+            // Edit Task Title
+            $("#sortable").on("dblclick", "li", function () {
+                var listItem = $(this);
+                var taskText = listItem.find("span:not(.checkbox)").text();
+                var newTitle = prompt("Edit task title:", taskText);
+
+                if (newTitle !== null) {
+                    listItem.find("span:not(.checkbox)").text(newTitle);
+                }
             });
 
-            var t = document.createTextNode(inputValue);
-            li.append(checkbox);
-            li.append(t);
-            li.append(deleteBtn);
-
-            if (inputValue === "") {
-                alert("Alahan naputtaa!");
-            } else {
-                $("#sortable").append(li);
-                li.fadeIn();
+            // Count Remaining Tasks
+            function updateTaskCount() {
+                var remainingTasks = $("#sortable li:not(.task-done)").length;
+                $("#taskCount").text("Remaining Tasks: " + remainingTasks);
             }
-            $("#myInput").val("");
-        }
 
-        function toggleTask(checkbox) {
-            var listItem = checkbox.parent();
-            listItem.toggleClass("task-done");
-        }
+            // Call updateTaskCount() after adding a new task or deleting a task
+            function newElement() {
+                var li = $("<li>").addClass("ui-state-default").hide();
+                var inputValue = $("#myInput").val();
+                var checkbox = $("<span>").addClass("checkbox ui-icon ui-icon-arrowthick-2-n-s");
+                checkbox.on("click", function () {
+                    toggleTask($(this));
+                });
 
-        function deleteTask(deleteBtn) {
-            var listItem = deleteBtn.parent();
-            listItem.fadeOut(function () {
-                listItem.remove();
-            });
-        }
+                var deleteBtn = $("<span>").addClass("deleteBtn").html("&#10004;");
+                deleteBtn.on("click", function () {
+                    deleteTask($(this));
+                });
 
-        function deleteCompletedTasks() {
-            $(".task-done").fadeOut(function () {
-                $(this).remove();
-            });
-        }
+                var t = document.createTextNode(inputValue);
+                li.append(checkbox);
+                li.append(t);
+                li.append(deleteBtn);
+
+                if (inputValue === "") {
+                    alert("Alahan naputtaa!");
+                } else {
+                    $("#sortable").append(li);
+                    li.fadeIn();
+                    updateTaskCount();
+                }
+                $("#myInput").val("");
+            }
+
+            function toggleTask(checkbox) {
+                var listItem = checkbox.parent();
+                listItem.toggleClass("task-done");
+                updateTaskCount();
+            }
+
+            function deleteTask(deleteBtn) {
+                var listItem = deleteBtn.parent();
+                listItem.fadeOut(function () {
+                    listItem.remove();
+                    updateTaskCount();
+                });
+            }
+
+            function deleteCompletedTasks() {
+                $(".task-done").fadeOut(function () {
+                    $(this).remove();
+                    updateTaskCount();
+                });
+            }
+        });
     </script>
 </head>
 
 <body>
     <div id="myDIV" class="header">
-        <h2>To Do List</h2>
-        <input type="text" id="myInput" placeholder="Title...">
+        <h2>To Do Lista</h2>
+        <input type="text" id="myInput" placeholder="Hae...">
         <span id="addBtn" class="addBtn"><button>Lisää listaan</button></span>
 
         <ul id="sortable" class="ul"></ul>
+        <span id="taskCount">Jäljellä olevat tehtävät: 0</span>
     </div>
     <button class="delete-button" id="deleteButton">Poista tehdyt tehtävät</button>
 </body>
+
 </html>
+
