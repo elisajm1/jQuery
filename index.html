@@ -71,17 +71,13 @@
                         toggleTask($(this));
                     });
 
-                    var deleteBtn = $("<span>").addClass("deleteBtn").html("&#10004;");
-                    deleteBtn.on("click", function () {
-                        deleteTask($(this));
-                    });
+                   
 
                     var label = $("<label>").text(inputValue);
 
                     li.append(checkbox);
                     li.append(label);
-                    li.append(deleteBtn);
-
+                
                     $("#sortable").append(li);
                     li.fadeIn();
                     updateTaskCount();
@@ -127,6 +123,5 @@
 </body>
 
 </html>
-
 
 
